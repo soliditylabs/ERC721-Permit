@@ -1,5 +1,5 @@
 {
-  "name": "erc721-permit",
+  "name": "@soliditylabs/erc721-permit",
   "version": "1.0.0",
   "description": "Repository for implementing the ERC721 permit (EIP-4494).",
   "main": "index.js",
