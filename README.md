@@ -1,46 +1,74 @@
-# Advanced Sample Hardhat Project
+# ERC721-permit
 
-This project demonstrates an advanced Hardhat use case, integrating other tools commonly used alongside Hardhat in the ecosystem.
+Package for implementing the ERC721 permit (EIP-4494). Unaudited, use at own risk.
 
-The project comes with a sample contract, a test for that contract, a sample script that deploys that contract, and an example of a task implementation, which simply lists the available accounts. It also comes with a variety of other tools, preconfigured to work with the project code.
+## Installation
 
-Try running some of the following tasks:
+1. Install the package via NPM:
 
-```shell
-npx hardhat accounts
-npx hardhat compile
-npx hardhat clean
-npx hardhat test
-npx hardhat node
-npx hardhat help
-REPORT_GAS=true npx hardhat test
-npx hardhat coverage
-npx hardhat run scripts/deploy.ts
-TS_NODE_FILES=true npx ts-node scripts/deploy.ts
-npx eslint '**/*.{js,ts}'
-npx eslint '**/*.{js,ts}' --fix
-npx prettier '**/*.{json,sol,md}' --check
-npx prettier '**/*.{json,sol,md}' --write
-npx solhint 'contracts/**/*.sol'
-npx solhint 'contracts/**/*.sol' --fix
+```bash
+$ npm install @soliditylabs/erc721-permit --save-dev
 ```
 
-# Etherscan verification
+Or Yarn:
 
-To try out Etherscan verification, you first need to deploy a contract to an Ethereum network that's supported by Etherscan, such as Ropsten.
-
-In this project, copy the .env.example file to a file named .env, and then edit it to fill in the details. Enter your Etherscan API key, your Ropsten node URL (eg from Alchemy), and the private key of the account which will send the deployment transaction. With a valid .env file in place, first deploy your contract:
-
-```shell
-hardhat run --network ropsten scripts/sample-script.ts
+```bash
+$ yarn add @soliditylabs/erc721-permit --dev
 ```
 
-Then, copy the deployment address and paste it in to replace `DEPLOYED_CONTRACT_ADDRESS` in this command:
+2. Import it into your ERC-721 contract:
 
-```shell
-npx hardhat verify --network ropsten DEPLOYED_CONTRACT_ADDRESS "Hello, Hardhat!"
+```solidity
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+import { ERC721, ERC721Permit } from "@soliditylabs/erc20-permit/contracts/ERC20Permit.sol";
+
+contract NFTMock is ERC721Permit("Mock721", "MOCK") {
+  uint256 private _lastTokenId;
+
+  function mint() public {
+    _mint(msg.sender, ++_lastTokenId);
+  }
+
+  function safeTransferFromWithPermit(
+    address from,
+    address to,
+    uint256 tokenId,
+    bytes memory _data,
+    uint256 deadline,
+    bytes memory signature
+  ) external {
+    _permit(msg.sender, tokenId, deadline, signature);
+    safeTransferFrom(from, to, tokenId, _data);
+  }
+}
+
 ```
 
-# Performance optimizations
+## Running tests
 
-For faster runs of your tests and scripts, consider skipping ts-node's type checking by setting the environment variable `TS_NODE_TRANSPILE_ONLY` to `1` in hardhat's environment. For more details see [the documentation](https://hardhat.org/guides/typescript.html#performance-optimizations).
+1. Clone the repository
+
+```bash
+$ git clone https://github.com/soliditylabs/ERC721-Permit
+```
+
+2. Install the dependencies
+
+```bash
+$ cd ERC721-Permit
+$ npm install
+```
+
+3. Run Hardhat Node
+
+```bash
+$ npx hardhat node
+```
+
+4. Run tests
+
+```bash
+$ npm test
+```
