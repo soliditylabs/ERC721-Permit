@@ -22,7 +22,7 @@ $ yarn add @soliditylabs/erc721-permit --dev
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import { ERC721, ERC721Permit } from "@soliditylabs/erc20-permit/contracts/ERC20Permit.sol";
+import { ERC721Permit } from "@soliditylabs/erc721-permit/contracts/ERC721Permit.sol";
 
 contract NFTMock is ERC721Permit("Mock721", "MOCK") {
   uint256 private _lastTokenId;
